@@ -6,4 +6,6 @@
     <string name="save">Save</string>
     <string name="incorrect_count">Incorrect count</string>
     <string name="incorrect_name">Incorrect name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
