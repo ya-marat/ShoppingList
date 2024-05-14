@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel;
+    private lateinit var onEditFinishListener: OnEditFinishListener
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -27,8 +29,8 @@ class ShopItemFragment : Fragment() {
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("ShopItemFragment", "onCreate")
         super.onCreate(savedInstanceState)
         parseArgs()
     }
@@ -39,6 +41,15 @@ class ShopItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_shop_item, container, false)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditFinishListener) {
+            onEditFinishListener = context
+        }else{
+            throw RuntimeException("Activity must implement OnEditFinishListener")
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -132,7 +143,7 @@ class ShopItemFragment : Fragment() {
         }
 
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditFinishListener.onEditFinish()
         }
     }
 
@@ -170,6 +181,10 @@ class ShopItemFragment : Fragment() {
         etName = view.findViewById(R.id.et_name)
         etCount = view.findViewById(R.id.et_count)
         buttonSave = view.findViewById(R.id.save_button)
+    }
+
+    interface OnEditFinishListener {
+        fun onEditFinish()
     }
 
     companion object {
